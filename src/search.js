@@ -12,13 +12,8 @@ class Search extends React.Component{
            error:null
         }
         dis=()=>{
-          try {
+       
             search(this.state.value).then((res)=>{this.setState({collection:res});console.log(res)}).catch(err=>this.setState({error:err}));
-          } catch (error) {
-            this.setState({ error });
-          }
-          
-         
         }
     addInput=(event)=>{
       this.setState({value:event.target.value,collection:[]})
