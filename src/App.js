@@ -1,17 +1,21 @@
 import React from 'react'
-import {getAll,update} from './BooksAPI'
-import './App.css'
 import {Route} from 'react-router-dom';
+import {getAll,update} from './BooksAPI'
 import Display from './display';
 import Search from './search';
+import './App.css'
+
 class BooksApp extends React.Component {
   state={
     books:[]
 }
-  changeState=(b,val)=>{
-    update(b,val).then(undefined,(e)=>console.log(e));
-    getAll().then((res)=>this.setState({books:res}),(e)=>console.log(e));
-    
+  changeState=(book,shelf)=>{
+      update(book, shelf).then(() => {
+      book.shelf = shelf        
+      this.setState(state => ({
+        books: state.books.filter(b => b.id !== book.id).concat(book)
+      }))     
+})
   }
  componentWillMount(){
   getAll().then((res)=>this.setState({books:res}),(e)=>console.log(e));
@@ -23,7 +27,7 @@ class BooksApp extends React.Component {
           <Display books={this.state.books} changeState={this.changeState}/>
         ) }/>
         <Route path="/search" render={()=>(
-        <Search changeState={this.changeState}/>)}/>
+        <Search books={this.state.books} changeState={this.changeState}/>)}/>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {Link} from 'react-router-dom';
-import {search,update} from './BooksAPI';
+import {search} from './BooksAPI';
 import List from './list';
 
 
@@ -12,36 +12,44 @@ class Search extends React.Component{
            error:null
         }
         dis=()=>{
-       
-            search(this.state.value).then((res)=>{this.setState({collection:res});console.log(res)}).catch(err=>this.setState({error:err}));
+            search(this.state.value).then((res)=>
+          {
+            if(res.error===undefined)
+            {
+              this.setState({collection:res})
+            }
+          })
+          .catch(e=>{});
         }
     addInput=(event)=>{
       this.setState({value:event.target.value,collection:[]})
+      this.dis()
   };
+  componentWillMount(){
+    this.dis();
+  }
     render(){
       
-      if(this.state.collection.error!=='empty query')
+       
        return ( <div className="search-books">
        <div className="search-books-bar">
-         <Link className="close-search" to="/" >Close</Link>
+         <Link key={this.state.value} className="close-search" to="/" >Close</Link>
          <div className="search-books-input-wrapper">
-           <input type="text" value={this.state.value} onChange={(event)=>{this.addInput(event)}} onKeyPress={(event)=>{if(event.key==="Enter")this.dis();}} placeholder="Search by title or author"/>
+           <input type="text" value={this.state.value} onChange={(event)=>{this.addInput(event)}}  placeholder="Search by title or author"/>
          </div>
        </div>
-    {(this.state.collection===[])?
+    {(this.state.value==='')?
       '':(<div className="search-books-results">
          <ol className="books-grid">
          {
            this.state.collection.map(item=>{return(
-            <List book={item} changeState={this.props.changeState} />
+            <List book={item} key={item.id} books={this.props.books} changeState={this.props.changeState} />
           )}) 
          } 
          </ol>
        </div>)}
      </div>);
-     else 
-        return (<div><h1 >No results Found.</h1>
-        <h2>Refresh to enter again.</h2></div>) ;
+    
     }
 }
 export default Search;

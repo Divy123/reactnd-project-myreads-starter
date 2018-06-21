@@ -8,7 +8,7 @@ class Display extends Component{
   
    render(){
      
-       return( <div className="list-books">
+       return( <div className="list-books" key={Math.random().toString(36).substr(-8)}> 
        <div className="list-books-title">
          <h1>MyReads</h1>
        </div>
@@ -21,7 +21,7 @@ class Display extends Component{
                  {
                    this.props.books.map((book)=>{
                      if(book.shelf==="currentlyReading")return(
-                   <List book={book} changeState={this.props.changeState} />
+                   <List  key={book.id}  book={book} books={this.props.books} changeState={this.props.changeState} />
                   )})
                  }
                </ol>
@@ -34,7 +34,7 @@ class Display extends Component{
                {
                    this.props.books.map((book)=>{
                      if(book.shelf==="wantToRead")return(
-                      <List book={book} changeState={this.props.changeState} />
+                      <List  key={book.id}  book={book} books={this.props.books} changeState={this.props.changeState} />
                   )})
                  } 
                </ol>
@@ -47,7 +47,7 @@ class Display extends Component{
                {
                    this.props.books.map((book)=>{
                      if(book.shelf==="read")return(
-                      <List book={book} changeState={this.props.changeState}/>
+                      <List key={book.id} book={book} books={this.props.books} changeState={this.props.changeState}/>
                   )})
                  }
                </ol>
